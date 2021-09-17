@@ -17,7 +17,7 @@ def conv3x3(in_planes, out_planes, stride=1):
 class BasicBlock(nn.Module):
     expansion = 1
 
-    def __init__(self, inplanes, planes, shape,stride=1, downsample=None, use_cbam=False, use_nbam=False,no_spatial=True):
+    def __init__(self, inplanes, planes, shape,stride=1, downsample=None, use_cbam=False, use_nam=False,no_spatial=True):
         super(BasicBlock, self).__init__()
         self.conv1 = conv3x3(inplanes, planes, stride)
         self.bn1 = nn.BatchNorm2d(planes)
@@ -33,10 +33,10 @@ class BasicBlock(nn.Module):
         else:
             self.cbam = None
 
-        if use_nbam:
-            self.nbam = Att(planes,no_spatial=self.no_spatial,shape=shape)
+        if use_nam:
+            self.nam = Att(planes,no_spatial=self.no_spatial,shape=shape)
         else:
-            self.nbam = None
+            self.nam = None
 
     def forward(self, x):
         residual = x
@@ -54,8 +54,8 @@ class BasicBlock(nn.Module):
         if not self.cbam is None:
             out = self.cbam(out)
 
-        if not self.nbam is None:
-            out = self.nbam(out)
+        if not self.nam is None:
+            out = self.nam(out)
 
         out += residual
         out = self.relu(out)
@@ -66,7 +66,7 @@ class BasicBlock(nn.Module):
 class Bottleneck(nn.Module):
     expansion = 4
 
-    def __init__(self, inplanes, planes,shape, stride=1, downsample=None, use_cbam=False, use_nbam=False, no_spatial=False):
+    def __init__(self, inplanes, planes,shape, stride=1, downsample=None, use_cbam=False, use_nam=False, no_spatial=False):
         super(Bottleneck, self).__init__()
         self.conv1 = nn.Conv2d(inplanes, planes, kernel_size=1, bias=False)
         self.bn1 = nn.BatchNorm2d(planes)
@@ -85,11 +85,11 @@ class Bottleneck(nn.Module):
         else:
             self.cbam = None
         
-        if use_nbam:
-            self.nbam = Att(planes * 4, no_spatial=self.no_spatial,shape=shape)
+        if use_nam:
+            self.nam = Att(planes * 4, no_spatial=self.no_spatial,shape=shape)
   
         else:
-            self.nbam = None
+            self.nam = None
         
     def forward(self, x):
         
@@ -114,8 +114,8 @@ class Bottleneck(nn.Module):
         if not self.cbam is None:
             out = self.cbam(out)
 
-        if not self.nbam is None:
-            out = self.nbam(out)
+        if not self.nam is None:
+            out = self.nam(out)
 
         out += residual
 
@@ -192,11 +192,11 @@ class ResNet(nn.Module):
             )
         layers = []
         layers.append(
-            block(self.inplanes, planes, shape,stride, downsample, use_cbam=att_type == 'CBAM', use_nbam=att_type == 'NBAM',
+            block(self.inplanes, planes, shape,stride, downsample, use_cbam=att_type == 'CBAM', use_nam=att_type == 'NAM',
                   no_spatial=no_spatial))
         self.inplanes = planes * block.expansion
         for i in range(1, blocks):
-            layers.append(block(self.inplanes, planes, shape,use_cbam=att_type == 'CBAM', use_nbam=att_type == 'NBAM',
+            layers.append(block(self.inplanes, planes, shape,use_cbam=att_type == 'CBAM', use_nam=att_type == 'NAM',
                                 no_spatial=no_spatial))
 
         return nn.Sequential(*layers)
