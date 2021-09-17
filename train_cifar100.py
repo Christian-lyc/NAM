@@ -41,7 +41,7 @@ parser.add_argument('--resume', default='', type=str, metavar='PATH', help='path
 parser.add_argument("--seed", type=int, default=1234, metavar='BS', help='input batch size for training (default: 64)')
 parser.add_argument("--prefix", type=str, required=True, metavar='PFX', help='prefix for logging & checkpoint saving')
 parser.add_argument('--evaluate', dest='evaluate', action='store_true', help='evaluation only')
-parser.add_argument('--att-type', type=str, choices=['BAM', 'CBAM','NBAM'], default=None)
+parser.add_argument('--att-type', type=str, choices=['BAM', 'CBAM','NAM'], default=None)
 parser.add_argument('--milestones',type=list,default=[60, 120, 160],help='optimizer milestones')
 parser.add_argument('--set', type=str, default='cifar100', help='location of the data corpus')
 parser.add_argument('--gamma',type=float,default=0.2,help='gamma')##
@@ -58,23 +58,23 @@ def updateBN(model):
         if m[0]=='layer1':
             for m1 in m[1]:
                 #m1.bn_a.weight.grad.data.add_(args.s * torch.sign(m1.bn_a.weight.data))
-                m1.nbam.Channel_Att.bn2.weight.grad.data.add_(args.s * torch.sign(m1.nbam.Channel_Att.bn2.weight.data))
-                m1.nbam.Spatial_Att.bn.weight.grad.data.add_(args.s * torch.sign(m1.nbam.Spatial_Att.bn.weight.data))
+                m1.nam.Channel_Att.bn2.weight.grad.data.add_(args.s * torch.sign(m1.nam.Channel_Att.bn2.weight.data))
+                m1.nam.Spatial_Att.bn.weight.grad.data.add_(args.s * torch.sign(m1.nam.Spatial_Att.bn.weight.data))
         if m[0]=='layer2':
             for m2 in m[1]:
                 #m2.bn_a.weight.grad.data.add_(args.s * torch.sign(m2.bn_a.weight.data))
-                m2.nbam.Channel_Att.bn2.weight.grad.data.add_(args.s * torch.sign(m2.nbam.Channel_Att.bn2.weight.data))
-                m2.nbam.Spatial_Att.bn.weight.grad.data.add_(args.s * torch.sign(m2.nbam.Spatial_Att.bn.weight.data))
+                m2.nam.Channel_Att.bn2.weight.grad.data.add_(args.s * torch.sign(m2.nam.Channel_Att.bn2.weight.data))
+                m2.nam.Spatial_Att.bn.weight.grad.data.add_(args.s * torch.sign(m2.nam.Spatial_Att.bn.weight.data))
         if m[0]=='layer3':
             for m3 in m[1]:
                 #m3.bn_a.weight.grad.data.add_(args.s * torch.sign(m3.bn_a.weight.data))
-                m3.nbam.Channel_Att.bn2.weight.grad.data.add_(args.s * torch.sign(m3.nbam.Channel_Att.bn2.weight.data))
-                m3.nbam.Spatial_Att.bn.weight.grad.data.add_(args.s * torch.sign(m3.nbam.Spatial_Att.bn.weight.data))
+                m3.nam.Channel_Att.bn2.weight.grad.data.add_(args.s * torch.sign(m3.nam.Channel_Att.bn2.weight.data))
+                m3.nam.Spatial_Att.bn.weight.grad.data.add_(args.s * torch.sign(m3.nam.Spatial_Att.bn.weight.data))
         if m[0]=='layer4':
             for m4 in m[1]:
                 #m4.bn_a.weight.grad.data.add_(args.s * torch.sign(m4.bn_a.weight.data))
-                m4.nbam.Channel_Att.bn2.weight.grad.data.add_(args.s * torch.sign(m4.nbam.Channel_Att.bn2.weight.data))
-                m4.nbam.Spatial_Att.bn.weight.grad.data.add_(args.s * torch.sign(m4.nbam.Spatial_Att.bn.weight.data))
+                m4.nam.Channel_Att.bn2.weight.grad.data.add_(args.s * torch.sign(m4.nam.Channel_Att.bn2.weight.data))
+                m4.nam.Spatial_Att.bn.weight.grad.data.add_(args.s * torch.sign(m4.nam.Spatial_Att.bn.weight.data))
 
 def main():
     global args, best_prec1
@@ -199,7 +199,7 @@ def train(train_loader, model, criterion, optimizer, epoch):
         # compute gradient and do SGD step
         optimizer.zero_grad()
         loss.backward()
-        if args.sr and args.att_type=='NBAM':
+        if args.sr and args.att_type=='NAM':
             updateBN(model)
         optimizer.step()
         
