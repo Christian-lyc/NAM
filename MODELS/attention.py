@@ -19,7 +19,7 @@ class Channel_Att(nn.Module):
         x = x.permute(0, 2, 3, 1).contiguous()
         x = torch.mul(weight_bn, x)
         x = x.permute(0, 3, 1, 2).contiguous()
-        x = F.relu(x)
+        
         x = torch.sigmoid(x) * residual #
         
         return x
