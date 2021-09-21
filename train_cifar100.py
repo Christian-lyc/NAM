@@ -57,24 +57,16 @@ def updateBN(model):
     for m in Op:
         if m[0]=='layer1':
             for m1 in m[1]:
-                #m1.bn_a.weight.grad.data.add_(args.s * torch.sign(m1.bn_a.weight.data))
                 m1.nam.Channel_Att.bn2.weight.grad.data.add_(args.s * torch.sign(m1.nam.Channel_Att.bn2.weight.data))
-                m1.nam.Spatial_Att.bn.weight.grad.data.add_(args.s * torch.sign(m1.nam.Spatial_Att.bn.weight.data))
         if m[0]=='layer2':
             for m2 in m[1]:
-                #m2.bn_a.weight.grad.data.add_(args.s * torch.sign(m2.bn_a.weight.data))
                 m2.nam.Channel_Att.bn2.weight.grad.data.add_(args.s * torch.sign(m2.nam.Channel_Att.bn2.weight.data))
-                m2.nam.Spatial_Att.bn.weight.grad.data.add_(args.s * torch.sign(m2.nam.Spatial_Att.bn.weight.data))
         if m[0]=='layer3':
             for m3 in m[1]:
-                #m3.bn_a.weight.grad.data.add_(args.s * torch.sign(m3.bn_a.weight.data))
                 m3.nam.Channel_Att.bn2.weight.grad.data.add_(args.s * torch.sign(m3.nam.Channel_Att.bn2.weight.data))
-                m3.nam.Spatial_Att.bn.weight.grad.data.add_(args.s * torch.sign(m3.nam.Spatial_Att.bn.weight.data))
         if m[0]=='layer4':
             for m4 in m[1]:
-                #m4.bn_a.weight.grad.data.add_(args.s * torch.sign(m4.bn_a.weight.data))
                 m4.nam.Channel_Att.bn2.weight.grad.data.add_(args.s * torch.sign(m4.nam.Channel_Att.bn2.weight.data))
-                m4.nam.Spatial_Att.bn.weight.grad.data.add_(args.s * torch.sign(m4.nam.Spatial_Att.bn.weight.data))
 
 def main():
     global args, best_prec1
