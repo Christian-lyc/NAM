@@ -57,12 +57,14 @@ class Att(nn.Module):
         super(Att, self).__init__()
         self.Channel_Att = Channel_Att(channels)
         self.no_spatial = no_spatial
-        self.Spatial_Att = Spatial_Att(shape)
+        #self.Spatial_Att = Spatial_Att(shape)
 
     def forward(self, x):
         x_out1=self.Channel_Att(x)
+        '''
         if not self.no_spatial:
             x_out2 = self.Spatial_Att(x_out1)
         else:
             x_out2 = x_out1
-        return x_out2  
+        '''
+        return x_out1  
